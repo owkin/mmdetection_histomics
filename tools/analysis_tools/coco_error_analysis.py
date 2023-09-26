@@ -11,6 +11,8 @@ from pycocotools.cocoeval import COCOeval
 
 
 def makeplot(rs, ps, outDir, class_name, iou_type):
+    if class_name == 'dysplastic/malignant epithelial':
+        class_name = 'malignant epithelial'
     cs = np.vstack([
         np.ones((2, 3)),
         np.array([0.31, 0.51, 0.74]),
@@ -192,12 +194,12 @@ def analyze_individual_category(k,
     dt.createIndex()
     # compute precision but ignore superclass confusion
     gt = copy.deepcopy(cocoGt)
-    child_catIds = gt.getCatIds(supNms=[nm['supercategory']])
-    for idx, ann in enumerate(gt.dataset['annotations']):
-        if ann['category_id'] in child_catIds and ann['category_id'] != catId:
-            gt.dataset['annotations'][idx]['ignore'] = 1
-            gt.dataset['annotations'][idx]['iscrowd'] = 1
-            gt.dataset['annotations'][idx]['category_id'] = catId
+    # child_catIds = gt.getCatIds(supNms=[nm['supercategory']])
+    # for idx, ann in enumerate(gt.dataset['annotations']):
+    #     if ann['category_id'] in child_catIds and ann['category_id'] != catId:
+    #         gt.dataset['annotations'][idx]['ignore'] = 1
+    #         gt.dataset['annotations'][idx]['iscrowd'] = 1
+    #         gt.dataset['annotations'][idx]['category_id'] = catId
     cocoEval = COCOeval(gt, copy.deepcopy(dt), iou_type)
     cocoEval.params.imgIds = imgIds
     cocoEval.params.maxDets = [100]
